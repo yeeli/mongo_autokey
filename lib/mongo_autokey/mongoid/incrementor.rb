@@ -38,7 +38,7 @@ module Mongo
         end
 
         def create
-          collection.insert(query.merge({ auto_increment: @default_number.to_i + 1}))
+          collection.insert_one(query.merge({ auto_increment: @default_number.to_i + 1}))
         end
       end
     end
