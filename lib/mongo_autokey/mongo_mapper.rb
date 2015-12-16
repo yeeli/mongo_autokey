@@ -1,4 +1,5 @@
-require 'mongo_autokey/mongomapper/plucky'
+require 'mongo_autokey/mongo_mapper/plucky'
+require 'mongo_autokey/mongo_mapper/incrementor'
 
 module MongoMapper
   module Autokey
@@ -20,7 +21,7 @@ module MongoMapper
         before_create :id_auto_increment
         class_eval <<-RUBY
           def id_auto_increment
-            incrementor = Mongo::AutoKey::Incrementor.new('#{self.model_name.collection}', '#{key_name}', #{default_number})
+            incrementor = Mongo::Autokey::MongoMapper::Incrementor.new('#{self.model_name.collection}', '#{key_name}', #{default_number})
             self.#{key_name} = incrementor.current
             incrementor.inc
           end
@@ -40,7 +41,7 @@ module MongoMapper
       end
       
       auto_key.each do |k, v| 
-        incrementor = Mongo::AutoKey::Incrementor.new(MongoMapper.database, self.class.model_name.collection, k, v)
+        incrementor = Mongo::Autokey::MongoMapper::Incrementor.new(self.class.model_name.collection, k, v)
         self.send k + "=", incrementor.current 
         incrementor.inc
       end
