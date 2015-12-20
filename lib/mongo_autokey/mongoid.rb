@@ -1,5 +1,6 @@
 require 'mongo_autokey/mongoid/fields'
-require "mongo_autokey/mongoid/incrementor"
+require 'mongo_autokey/mongoid/incrementor'
+require 'mongo_autokey/mongoid/criteria'
 
 module Mongoid
   module Autokey
@@ -27,7 +28,12 @@ module Mongoid
           end
         RUBY
       end
+
+      def queryable
+        Threaded.current_scope(self) || Mongo::Autokey::Mongoid::Criteria.new(self)
+      end
     end
+
 
     private
 
